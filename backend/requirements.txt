@@ -1,0 +1,42 @@
+# FastAPI and server
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy>=2.0.36
+psycopg[binary]>=3.2.0  # Updated for Python 3.13 compatibility
+alembic>=1.12.1
+
+# Authentication
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+
+# File handling
+aiofiles==23.2.1
+Pillow>=10.2.0,<13.0.0  # Updated for Python 3.13 compatibility
+
+# Supabase (for file storage and database)
+supabase>=2.13.0
+
+
+# Vector database (pgvector via Supabase PostgreSQL)
+pgvector==0.2.4
+
+# Background tasks
+celery==5.3.4
+redis==5.0.1
+
+# AI/ML libraries (HuggingFace)
+sentence-transformers>=2.2.2
+# Note: torch and transformers are installed as dependencies of sentence-transformers
+
+# OCR (for future use)
+# pytesseract==0.3.10
+
+# Utilities
+pydantic>=2.9.0  # Updated for Python 3.13 compatibility
+pydantic-settings>=2.5.0  # Updated for Python 3.13 compatibility
+email-validator>=2.2.0  # Updated for Python 3.13 compatibility
+

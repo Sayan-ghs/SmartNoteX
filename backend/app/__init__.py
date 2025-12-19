@@ -1,0 +1,2 @@
+# SmartNoteX Backend Application
+
