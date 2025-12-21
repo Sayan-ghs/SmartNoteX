@@ -7,15 +7,21 @@ from app.config import settings
 from app.database import engine, Base
 from app.api import auth, notebooks, chapters, notes, rag
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
-
 # Initialize FastAPI app
 app = FastAPI(
     title="SmartNoteX API",
     description="AI-Powered Engineering Notebook Backend API",
     version="1.0.0"
 )
+
+# ✅ Safe DB initialization
+@app.on_event("startup")
+def startup_db():
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("✅ Database connected & tables verified")
+    except Exception as e:
+        print("⚠️ Database connection failed:", e)
 
 # Configure CORS
 app.add_middleware(
@@ -36,7 +42,6 @@ app.include_router(rag.router, prefix="/api")
 
 @app.get("/")
 async def root():
-    """Root endpoint."""
     return {
         "message": "SmartNoteX API",
         "version": "1.0.0",
@@ -46,6 +51,4 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
     return {"status": "healthy"}
-

@@ -21,11 +21,14 @@ export const Login: React.FC = () => {
           try {
                // Use URLSearchParams for OAuth2PasswordRequestForm if backend expects it
                // Default FastAPI OAuth2 expects form-data
-               const formData = new FormData();
-               formData.append('username', email); // FASTAPI Oauth2 uses 'username' for email often
-               formData.append('password', password);
+               // const formData = new FormData();
+               // formData.append('username', email); // FASTAPI Oauth2 uses 'username' for email often
+               // formData.append('password', password);
 
-               const { data } = await api.post('/auth/login', formData); // Adjust endpoint to match backend
+               const { data } = await api.post('/auth/login',{
+                    email,
+                    password
+               }); // Adjust endpoint to match backend
 
                // Assume backend returns { access_token, token_type }
                // We also need user data. If backend doesn't return user, we fetch it.
@@ -33,23 +36,27 @@ export const Login: React.FC = () => {
 
                // Let's create a fake user for now if backend doesn't return one, 
                // OR fetch /users/me immediately.
-
-               login(data.access_token, { id: 0, email }); // Temporary user obj
-
+               // Temporary user obj
                // Fetch real user details
                try {
-                    const userRes = await api.get('/users/me', {
+                    const userRes = await api.get('/auth/me', {
                          headers: { Authorization: `Bearer ${data.access_token}` }
                     });
+
                     login(data.access_token, userRes.data);
                } catch (err) {
                     console.warn("Could not fetch user details", err);
                }
 
                navigate('/');
-          } catch (err: any) {
-               setError(err.response?.data?.detail || 'Login failed');
-          } finally {
+          }catch (err: any) {
+               const detail = err.response?.data?.detail;
+               setError(
+                    Array.isArray(detail)
+                      ? detail[0].msg
+                      : detail || 'Login failed'
+               );
+} finally {
                setLoading(false);
           }
      };
