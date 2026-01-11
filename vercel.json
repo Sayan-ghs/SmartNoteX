@@ -1,31 +1,8 @@
 {
-  "version": 2,
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/dist",
-  "installCommand": "cd frontend && npm install",
-  "framework": "vite",
-  "regions": ["iad1"],
-  "functions": {
-    "frontend/api/**/*.ts": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm install --prefix frontend && npm run build --prefix frontend",
+  "devCommand": "npm run dev --prefix frontend",
+  "installCommand": "npm install --prefix frontend",
+  "framework": null,
+  "outputDirectory": "frontend/dist"
 }
