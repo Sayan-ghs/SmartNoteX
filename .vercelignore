@@ -1,4 +1,4 @@
-# Ignore everything except frontend
+# Ignore everything except Frontend
 backend/
 .venv/
 *.pyc
@@ -8,5 +8,5 @@ __pycache__/
 *.log
 node_modules/
 
-# Keep frontend
-!frontend/
+# Keep Frontend directory (case-sensitive)
+!Frontend/
