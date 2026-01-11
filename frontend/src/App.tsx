@@ -13,6 +13,7 @@ import { BlogsPage } from './components/BlogsPage';
 import { BlogDetail } from './components/BlogDetail';
 import { AIAssistant } from './components/AIAssistant';
 import MessagingPage from './pages/MessagingPage';
+import { ConnectionTest } from './components/ConnectionTest';
 
 type Page = 
   | 'landing' 
@@ -27,7 +28,8 @@ type Page =
   | 'blog-detail'
   | 'ai-assistant'
   | 'admin'
-  | 'messages';
+  | 'messages'
+  | 'connection-test';
 
 type UserRole = 'student' | 'faculty' | 'admin' | null;
 
@@ -195,6 +197,10 @@ export default function App() {
       case 'messages':
         return (
           <MessagingPage />
+        );
+      case 'connection-test':
+        return (
+          <ConnectionTest />
         );
       default:
         return null;

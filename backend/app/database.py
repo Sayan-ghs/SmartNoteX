@@ -10,6 +10,7 @@ from app.config import settings
 # Create database engine
 # Note: psycopg3 uses different connection string format
 # Convert postgresql:// to postgresql+psycopg:// for psycopg3
+# Add prepare_threshold=0 to connection args to disable prepared statements
 database_url = settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
 engine = create_engine(
@@ -17,6 +18,8 @@ engine = create_engine(
     pool_pre_ping=True,  # Verify connections before using
     pool_size=10,
     max_overflow=20,
+    pool_recycle=3600,  # Recycle connections after 1 hour
+    echo_pool=False,
 )
 
 # Create session factory
