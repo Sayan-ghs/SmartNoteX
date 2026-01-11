@@ -1,0 +1,12 @@
+# Ignore everything except frontend
+backend/
+.venv/
+*.pyc
+__pycache__/
+.env
+.env.local
+*.log
+node_modules/
+
+# Keep frontend
+!frontend/
