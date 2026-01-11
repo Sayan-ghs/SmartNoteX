@@ -132,6 +132,18 @@ Authorization: Bearer <access_token>
 - `GET /api/notes/{note_id}/content` - List note contents
 - `DELETE /api/notes/content/{content_id}` - Delete content
 
+### Messaging & Community Chat 💬
+- `POST /api/messaging/conversations` - Create/get direct conversation
+- `GET /api/messaging/conversations` - List user's conversations
+- `GET /api/messaging/conversations/{id}/messages` - Get messages
+- `POST /api/messaging/conversations/{id}/messages` - Send message
+- `POST /api/messaging/communities` - Create community
+- `GET /api/messaging/communities` - List communities
+- `POST /api/messaging/communities/{id}/join` - Join community
+- `POST /api/messaging/communities/{id}/messages` - Send community message
+
+> **Full Messaging API Documentation:** See [MESSAGING_SYSTEM.md](MESSAGING_SYSTEM.md) for complete documentation including 15+ endpoints, real-time features, and security details.
+
 ## 🗄️ Database Schema
 
 ### Users
@@ -183,4 +195,14 @@ See `.env.example` for all required environment variables.
 - [ ] Implement RAG doubt solver
 - [ ] Add sharing functionality
 - [ ] Set up Celery workers for background tasks
+- [x] **Messaging & Community Chat System** - Complete with 1-1 chat, communities, real-time updates, RLS security
+
+## 📖 Additional Documentation
+
+- **[MESSAGING_SYSTEM.md](MESSAGING_SYSTEM.md)** - Complete messaging system documentation (8000+ words)
+- **[MESSAGING_QUICKSTART.md](MESSAGING_QUICKSTART.md)** - 5-minute quick start guide
+- **[MESSAGING_DEPLOYMENT.md](MESSAGING_DEPLOYMENT.md)** - Production deployment checklist
+- **[MESSAGING_IMPLEMENTATION_SUMMARY.md](MESSAGING_IMPLEMENTATION_SUMMARY.md)** - Implementation overview
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Overall system architecture
+- **[PGVECTOR_MIGRATION.md](PGVECTOR_MIGRATION.md)** - Vector database setup guide
 

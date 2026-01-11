@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     department TEXT,
     avatar_url TEXT,
     bio TEXT,
+    public_code TEXT UNIQUE NOT NULL DEFAULT '',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -93,6 +94,7 @@ CREATE TABLE IF NOT EXISTS public.resources (
     subject TEXT,
     tags TEXT[],
     uploaded_by UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    visibility TEXT NOT NULL DEFAULT 'private' CHECK (visibility IN ('public', 'private')),
     is_approved BOOLEAN DEFAULT false,
     view_count INTEGER DEFAULT 0,
     download_count INTEGER DEFAULT 0,
@@ -105,6 +107,8 @@ CREATE INDEX idx_resources_uploaded_by ON public.resources(uploaded_by);
 CREATE INDEX idx_resources_subject ON public.resources(subject);
 CREATE INDEX idx_resources_is_approved ON public.resources(is_approved);
 CREATE INDEX idx_resources_resource_type ON public.resources(resource_type);
+CREATE INDEX idx_resources_visibility ON public.resources(visibility);
+CREATE INDEX idx_users_public_code ON public.users(public_code);
 
 -- Enable RLS
 ALTER TABLE public.resources ENABLE ROW LEVEL SECURITY;
@@ -113,6 +117,10 @@ ALTER TABLE public.resources ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can view approved resources"
     ON public.resources FOR SELECT
     USING (is_approved = true);
+
+CREATE POLICY "Anyone can view public approved resources"
+    ON public.resources FOR SELECT
+    USING (is_approved = true AND visibility = 'public');
 
 CREATE POLICY "Users can view their own resources"
     ON public.resources FOR SELECT
@@ -432,6 +440,70 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ============================================================================
+-- FUNCTION: Generate unique public code
+-- ============================================================================
+-- Generates a unique public code with role-based prefix and random hash
+-- Format: SNX-STU-XXXXXX or SNX-FAC-XXXXXX
+-- Uses MD5 hash of UUID + timestamp for non-guessability
+
+CREATE OR REPLACE FUNCTION public.generate_public_code(user_role TEXT)
+RETURNS TEXT AS $$
+DECLARE
+    prefix TEXT;
+    random_hash TEXT;
+    new_code TEXT;
+    attempt_count INTEGER := 0;
+    max_attempts INTEGER := 10;
+BEGIN
+    -- Determine prefix based on role
+    prefix := CASE 
+        WHEN user_role = 'student' THEN 'SNX-STU-'
+        WHEN user_role = 'faculty' THEN 'SNX-FAC-'
+        ELSE 'SNX-USR-'
+    END;
+    
+    -- Loop to ensure uniqueness (collision handling)
+    LOOP
+        -- Generate 6-character hash using MD5 of UUID + timestamp
+        random_hash := UPPER(SUBSTRING(MD5(uuid_generate_v4()::TEXT || clock_timestamp()::TEXT) FROM 1 FOR 6));
+        new_code := prefix || random_hash;
+        
+        -- Check if code already exists
+        IF NOT EXISTS (SELECT 1 FROM public.users WHERE public_code = new_code) THEN
+            RETURN new_code;
+        END IF;
+        
+        -- Prevent infinite loop
+        attempt_count := attempt_count + 1;
+        IF attempt_count >= max_attempts THEN
+            RAISE EXCEPTION 'Failed to generate unique public code after % attempts', max_attempts;
+        END IF;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
+-- ============================================================================
+-- TRIGGER: Auto-generate public_code on user creation
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.set_user_public_code()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Only generate if public_code is empty or null
+    IF NEW.public_code IS NULL OR NEW.public_code = '' THEN
+        NEW.public_code := public.generate_public_code(NEW.role);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trigger_set_public_code ON public.users;
+CREATE TRIGGER trigger_set_public_code
+    BEFORE INSERT OR UPDATE OF role ON public.users
+    FOR EACH ROW
+    EXECUTE FUNCTION public.set_user_public_code();
 
 -- ============================================================================
 -- 9. VIEWS FOR ANALYTICS (Optional)

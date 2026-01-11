@@ -30,6 +30,7 @@ redis==5.0.1
 
 # AI/ML libraries (HuggingFace)
 sentence-transformers>=2.2.2
+huggingface_hub==0.19.4  # Pinned for sentence-transformers 2.2.2 compatibility (cached_download API)
 # Note: torch and transformers are installed as dependencies of sentence-transformers
 
 # OCR (for future use)

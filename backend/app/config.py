@@ -19,7 +19,8 @@ class Settings(BaseSettings):
     
     # Supabase Storage
     SUPABASE_URL: str
-    SUPABASE_KEY: str
+    SUPABASE_KEY: str  # Anon/public key
+    SUPABASE_SERVICE_KEY: str  # Service role key (for admin operations)
     SUPABASE_STORAGE_BUCKET: str = "smartnotex-files"
     
     # Vector Database (pgvector - enabled in Supabase PostgreSQL)
