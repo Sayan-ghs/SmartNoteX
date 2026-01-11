@@ -1,4 +1,4 @@
-# Ignore everything except Frontend
+# Ignore backend and Python files
 backend/
 .venv/
 *.pyc
@@ -6,7 +6,6 @@ __pycache__/
 .env
 .env.local
 *.log
-node_modules/
 
-# Keep Frontend directory (case-sensitive)
-!Frontend/
+# Don't ignore Frontend directory - it's needed for build
+# node_modules will be installed during build
