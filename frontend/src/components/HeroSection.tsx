@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Github, Linkedin, Mail, Twitter } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface HeroSectionProps {
   onCTAClick: () => void;

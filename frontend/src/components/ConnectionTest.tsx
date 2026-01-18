@@ -31,7 +31,7 @@ export function ConnectionTest() {
 
     // Check Supabase Connection
     try {
-      const { data, error } = await supabase.auth.getSession();
+      const { data: _data, error } = await supabase.auth.getSession();
       if (error) {
         setSupabaseStatus('error');
         setSupabaseMessage(`Supabase error: ${error.message}`);

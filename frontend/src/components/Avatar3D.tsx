@@ -7,14 +7,14 @@ interface CharacterProps {
   gesture: 'idle' | 'nod' | 'wave' | 'point';
 }
 
-function Character({ scrollProgress, sectionIndex, gesture }: CharacterProps) {
+function Character({ sectionIndex, gesture }: CharacterProps) {
   const groupRef = useRef<any>(null);
   const headRef = useRef<any>(null);
   const leftArmRef = useRef<any>(null);
   const rightArmRef = useRef<any>(null);
   const timeRef = useRef(0);
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     timeRef.current += delta;
     
     if (!groupRef.current || !headRef.current) return;

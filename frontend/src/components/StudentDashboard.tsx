@@ -20,7 +20,7 @@ interface StudentDashboardProps {
   onViewBlog: (id: string) => void;
 }
 
-export function StudentDashboard({ onNavigate, onLogout, onViewResource, onViewBlog }: StudentDashboardProps) {
+export function StudentDashboard({ onNavigate, onLogout, onViewResource, onViewBlog: _onViewBlog }: StudentDashboardProps) {
   const [notesCount, setNotesCount] = useState(0);
   const [downloadsCount, setDownloadsCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);

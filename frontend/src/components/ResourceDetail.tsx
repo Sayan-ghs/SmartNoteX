@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
-import { ArrowLeft, Download, FileText, User, MessageSquare, Send } from 'lucide-react';
+import { ArrowLeft, Download, FileText, MessageSquare, Send } from 'lucide-react';
 
 interface ResourceDetailProps {
   resourceId: string | null;

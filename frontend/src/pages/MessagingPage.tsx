@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { MessageSquare, Users, Search, Plus } from 'lucide-react';
 import ChatList from '../components/Messaging/ChatList';
 import ChatWindow from '../components/Messaging/ChatWindow';
@@ -13,7 +12,7 @@ const MessagingPage = () => {
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [selectedCommunityId, setSelectedCommunityId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showNewChat, setShowNewChat] = useState(false);
+  const [_showNewChat, setShowNewChat] = useState(false);
 
   return (
     <div className="flex h-screen bg-gray-50">

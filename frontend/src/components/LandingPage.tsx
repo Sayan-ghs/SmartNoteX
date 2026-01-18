@@ -1,14 +1,11 @@
 import { motion } from 'framer-motion';
 import { 
-  BookOpen, 
+  FileText,
   MessageSquare, 
   Brain, 
   Users, 
   ArrowRight, 
-  CheckCircle, 
-  TrendingUp,
   Sparkles,
-  FileText,
   Star
 } from 'lucide-react';
 

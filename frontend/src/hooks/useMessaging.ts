@@ -48,6 +48,7 @@ export interface Community {
   created_at: string;
   updated_at: string;
   is_member?: boolean;
+  unread_count?: number;
 }
 
 // Hook: useMessages - Subscribe to real-time messages for a conversation

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Send, User, MoreVertical, UserPlus, Settings, Bell, Users } from 'lucide-react';
-import { useCommunityMessages } from '../../hooks/useMessaging';
+import { useCommunityMessages, sendCommunityMessage } from '../../hooks/useMessaging';
 import { useAuthStore } from '../../stores/useAuthStore';
 
 interface CommunityChatProps {
@@ -10,16 +10,16 @@ interface CommunityChatProps {
 
 const CommunityChat = ({ communityId }: CommunityChatProps) => {
   const { user } = useAuthStore();
-  const { messages, loading, error, fetchMessages, sendMessage } = useCommunityMessages(communityId);
+  const { messages, loading, error, refetch } = useCommunityMessages(communityId);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (communityId) {
-      fetchMessages();
+      refetch();
     }
-  }, [communityId]);
+  }, [communityId, refetch]);
 
   useEffect(() => {
     scrollToBottom();
@@ -34,8 +34,9 @@ const CommunityChat = ({ communityId }: CommunityChatProps) => {
 
     setSending(true);
     try {
-      await sendMessage(newMessage.trim());
+      await sendCommunityMessage(communityId, newMessage.trim());
       setNewMessage('');
+      refetch();
     } catch (err) {
       console.error('Failed to send message:', err);
     } finally {
@@ -61,7 +62,7 @@ const CommunityChat = ({ communityId }: CommunityChatProps) => {
   if (error) {
     return (
       <div className="flex-1 flex items-center justify-center text-red-600">
-        Error loading messages: {error}
+        Error loading messages: {error.message}
       </div>
     );
   }
@@ -122,7 +123,7 @@ const CommunityChat = ({ communityId }: CommunityChatProps) => {
                       ? 'from-indigo-400 to-purple-500' 
                       : 'from-blue-400 to-cyan-500'
                   } flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}>
-                    {message.sender?.username?.[0]?.toUpperCase() || <User className="w-4 h-4" />}
+                    <User className="w-4 h-4" />
                   </div>
                 ) : (
                   <div className="w-8" />
@@ -132,7 +133,7 @@ const CommunityChat = ({ communityId }: CommunityChatProps) => {
                 <div className={`max-w-md ${isOwnMessage ? 'items-end' : 'items-start'} flex flex-col`}>
                   {showUsername && (
                     <span className="text-xs font-medium text-gray-700 mb-1 px-1">
-                      {message.sender?.username || 'Unknown User'}
+                      User
                     </span>
                   )}
                   <div

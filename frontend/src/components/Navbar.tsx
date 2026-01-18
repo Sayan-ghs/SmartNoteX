@@ -1,4 +1,4 @@
-import { Search, Bell, User, LogOut, Sparkles, MessageSquare } from 'lucide-react';
+import { Search, Bell, LogOut, Sparkles, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface NavbarProps {

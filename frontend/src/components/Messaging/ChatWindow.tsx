@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Send, User, MoreVertical, Phone, Video, Info } from 'lucide-react';
-import { useMessages } from '../../hooks/useMessaging';
+import { useMessages, sendMessage as sendMessageHelper } from '../../hooks/useMessaging';
 import { useAuthStore } from '../../stores/useAuthStore';
 
 interface ChatWindowProps {
@@ -10,16 +10,16 @@ interface ChatWindowProps {
 
 const ChatWindow = ({ conversationId }: ChatWindowProps) => {
   const { user } = useAuthStore();
-  const { messages, loading, error, fetchMessages, sendMessage } = useMessages(conversationId);
+  const { messages, loading, error, refetch } = useMessages(conversationId);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (conversationId) {
-      fetchMessages();
+      refetch();
     }
-  }, [conversationId]);
+  }, [conversationId, refetch]);
 
   useEffect(() => {
     scrollToBottom();
@@ -34,8 +34,9 @@ const ChatWindow = ({ conversationId }: ChatWindowProps) => {
 
     setSending(true);
     try {
-      await sendMessage(newMessage.trim());
+      await sendMessageHelper(conversationId, newMessage.trim());
       setNewMessage('');
+      refetch();
     } catch (err) {
       console.error('Failed to send message:', err);
     } finally {
@@ -61,7 +62,7 @@ const ChatWindow = ({ conversationId }: ChatWindowProps) => {
   if (error) {
     return (
       <div className="flex-1 flex items-center justify-center text-red-600">
-        Error loading messages: {error}
+        Error loading messages: {error.message}
       </div>
     );
   }
@@ -119,7 +120,7 @@ const ChatWindow = ({ conversationId }: ChatWindowProps) => {
                   <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${
                     isOwnMessage ? 'from-indigo-400 to-purple-500' : 'from-blue-400 to-cyan-500'
                   } flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}>
-                    {message.sender?.username?.[0]?.toUpperCase() || <User className="w-4 h-4" />}
+                    <User className="w-4 h-4" />
                   </div>
                 ) : (
                   <div className="w-8" />

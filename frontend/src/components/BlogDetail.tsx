@@ -135,7 +135,7 @@ export function BlogDetail({ blogId, userRole, onNavigate, onLogout, onBack, onV
               <div className="flex items-center justify-between">
                 <div
                   className="flex items-center gap-3 cursor-pointer"
-                  onClick={() => onViewProfile(blog.id)}
+                  onClick={() => blog.id && onViewProfile(blog.id)}
                 >
                   <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center text-white font-semibold">
                     {blog.authorAvatar}

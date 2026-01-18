@@ -5,8 +5,7 @@ import { Sidebar } from './Sidebar';
 import { 
   Users, 
   CheckCircle, 
-  TrendingUp, 
-  FileText,
+  TrendingUp,
   AlertCircle,
   ArrowUp
 } from 'lucide-react';
@@ -17,7 +16,7 @@ interface FacultyDashboardProps {
   onViewResource: (id: string) => void;
 }
 
-export function FacultyDashboard({ onNavigate, onLogout, onViewResource }: FacultyDashboardProps) {
+export function FacultyDashboard({ onNavigate, onLogout, onViewResource: _onViewResource }: FacultyDashboardProps) {
   const [notesApproved, setNotesApproved] = useState(0);
   const [activeStudents, setActiveStudents] = useState(0);
   const [engagement, setEngagement] = useState(0);

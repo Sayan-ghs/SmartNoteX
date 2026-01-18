@@ -21,7 +21,7 @@ interface ProfilePageProps {
   onViewBlog: (id: string) => void;
 }
 
-export function ProfilePage({ userId, userRole, onNavigate, onLogout, onViewResource, onViewBlog }: ProfilePageProps) {
+export function ProfilePage({ userId: _userId, userRole, onNavigate, onLogout, onViewResource, onViewBlog }: ProfilePageProps) {
   const profile = {
     name: 'John Doe',
     avatar: 'JD',

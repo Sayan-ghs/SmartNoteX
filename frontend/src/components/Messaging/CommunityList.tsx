@@ -12,13 +12,13 @@ interface CommunityListProps {
 
 const CommunityList = ({ searchQuery, selectedCommunityId, onSelectCommunity }: CommunityListProps) => {
   const { user } = useAuthStore();
-  const { communities, loading, error, fetchCommunities } = useCommunities(user?.id || '');
+  const { communities, loading, error, refetch } = useCommunities();
 
   useEffect(() => {
     if (user?.id) {
-      fetchCommunities();
+      refetch();
     }
-  }, [user?.id]);
+  }, [user?.id, refetch]);
 
   const filteredCommunities = communities.filter(community =>
     community.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -36,7 +36,7 @@ const CommunityList = ({ searchQuery, selectedCommunityId, onSelectCommunity }: 
   if (error) {
     return (
       <div className="p-4 text-center text-red-600">
-        Error loading communities: {error}
+        Error loading communities: {error.message}
       </div>
     );
   }
@@ -53,7 +53,8 @@ const CommunityList = ({ searchQuery, selectedCommunityId, onSelectCommunity }: 
     <div className="divide-y divide-gray-200">
       {filteredCommunities.map((community, index) => {
         const isSelected = community.id === selectedCommunityId;
-        const hasUnread = community.unread_count > 0;
+        const hasUnread = (community.unread_count || 0) > 0;
+        const isPrivate = !community.is_public;
 
         return (
           <motion.div
@@ -78,7 +79,7 @@ const CommunityList = ({ searchQuery, selectedCommunityId, onSelectCommunity }: 
                   <h3 className={`font-semibold truncate ${hasUnread ? 'text-gray-900' : 'text-gray-700'}`}>
                     {community.name}
                   </h3>
-                  {community.is_private ? (
+                  {isPrivate ? (
                     <Lock className="w-4 h-4 text-gray-400 flex-shrink-0" />
                   ) : (
                     <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -95,7 +96,7 @@ const CommunityList = ({ searchQuery, selectedCommunityId, onSelectCommunity }: 
                   <span className="text-xs text-gray-500">
                     {community.member_count} member{community.member_count !== 1 ? 's' : ''}
                   </span>
-                  {hasUnread && (
+                  {hasUnread && community.unread_count && (
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-600 text-white">
                       {community.unread_count} new
                     </span>

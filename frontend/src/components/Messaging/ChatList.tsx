@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Clock } from 'lucide-react';
+
 import { useConversations } from '../../hooks/useMessaging';
 import { useAuthStore } from '../../stores/useAuthStore';
 
@@ -12,17 +12,16 @@ interface ChatListProps {
 
 const ChatList = ({ searchQuery, selectedConversationId, onSelectConversation }: ChatListProps) => {
   const { user } = useAuthStore();
-  const { conversations, loading, error, fetchConversations } = useConversations(user?.id || '');
+  const { conversations, loading, error, refetch } = useConversations();
 
   useEffect(() => {
     if (user?.id) {
-      fetchConversations();
+      refetch();
     }
-  }, [user?.id]);
+  }, [user?.id, refetch]);
 
   const filteredConversations = conversations.filter(conv => {
-    const otherParticipant = conv.participants.find(p => p.id !== user?.id);
-    const name = otherParticipant?.username || otherParticipant?.email || 'Unknown';
+    const name = conv.other_user_name || conv.name || 'Unknown';
     return name.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
@@ -37,7 +36,7 @@ const ChatList = ({ searchQuery, selectedConversationId, onSelectConversation }:
   if (error) {
     return (
       <div className="p-4 text-center text-red-600">
-        Error loading conversations: {error}
+        Error loading conversations: {error.message}
       </div>
     );
   }
@@ -53,9 +52,10 @@ const ChatList = ({ searchQuery, selectedConversationId, onSelectConversation }:
   return (
     <div className="divide-y divide-gray-200">
       {filteredConversations.map((conversation, index) => {
-        const otherParticipant = conversation.participants.find(p => p.id !== user?.id);
+        const userName = conversation.other_user_name || conversation.name || 'Unknown User';
+        const userInitial = userName[0]?.toUpperCase() || 'U';
         const isSelected = conversation.id === selectedConversationId;
-        const hasUnread = conversation.unread_count > 0;
+        const hasUnread = (conversation.unread_count || 0) > 0;
 
         return (
           <motion.div
@@ -71,18 +71,18 @@ const ChatList = ({ searchQuery, selectedConversationId, onSelectConversation }:
             <div className="flex items-start gap-3">
               {/* Avatar */}
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
-                {otherParticipant?.username?.[0]?.toUpperCase() || <User className="w-6 h-6" />}
+                {userInitial}
               </div>
 
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
                   <h3 className={`font-semibold truncate ${hasUnread ? 'text-gray-900' : 'text-gray-700'}`}>
-                    {otherParticipant?.username || otherParticipant?.email || 'Unknown User'}
+                    {userName}
                   </h3>
-                  {conversation.last_message_at && (
+                  {conversation.updated_at && (
                     <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
-                      {new Date(conversation.last_message_at).toLocaleDateString()}
+                      {new Date(conversation.updated_at).toLocaleDateString()}
                     </span>
                   )}
                 </div>
@@ -93,7 +93,7 @@ const ChatList = ({ searchQuery, selectedConversationId, onSelectConversation }:
                   </p>
                 )}
 
-                {hasUnread && (
+                {hasUnread && conversation.unread_count && (
                   <div className="mt-2">
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-600 text-white">
                       {conversation.unread_count} new
