@@ -14,9 +14,9 @@ function Character({ sectionIndex, gesture }: CharacterProps) {
   const rightArmRef = useRef<any>(null);
   const timeRef = useRef(0);
 
-  useFrame((_state, delta) => {
+  useFrame((_, delta) => {
     timeRef.current += delta;
-    
+
     if (!groupRef.current || !headRef.current) return;
 
     // Idle breathing animation
@@ -141,8 +141,8 @@ export function Avatar3D({ scrollProgress, sectionIndex, gesture = 'idle', class
         <ambientLight intensity={0.6} />
         <directionalLight position={[5, 5, 5]} intensity={0.8} />
         <directionalLight position={[-5, 3, -5]} intensity={0.3} />
-        <Character 
-          scrollProgress={scrollProgress} 
+        <Character
+          scrollProgress={scrollProgress}
           sectionIndex={sectionIndex}
           gesture={gesture}
         />

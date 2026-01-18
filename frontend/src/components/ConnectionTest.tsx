@@ -31,7 +31,7 @@ export function ConnectionTest() {
 
     // Check Supabase Connection
     try {
-      const { data: _data, error } = await supabase.auth.getSession();
+      const { error } = await supabase.auth.getSession();
       if (error) {
         setSupabaseStatus('error');
         setSupabaseMessage(`Supabase error: ${error.message}`);
@@ -59,7 +59,7 @@ export function ConnectionTest() {
     >
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold mb-6 text-gray-900">Connection Status</h2>
-        
+
         {/* Backend Status */}
         <div className="mb-6 p-4 border border-gray-200 rounded-lg">
           <div className="flex items-center gap-3 mb-2">
@@ -94,7 +94,7 @@ export function ConnectionTest() {
             <div className="mt-2 text-xs text-gray-600">
               <p>Check your .env file:</p>
               <code className="block mt-1 p-2 bg-gray-100 rounded">
-                VITE_SUPABASE_URL=your_url<br/>
+                VITE_SUPABASE_URL=your_url<br />
                 VITE_SUPABASE_ANON_KEY=your_key
               </code>
             </div>

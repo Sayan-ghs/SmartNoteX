@@ -104,10 +104,10 @@ export function BlogDetail({ blogId, userRole, onNavigate, onLogout, onBack, onV
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <Navbar userRole={userRole} onLogout={onLogout} />
-      
+
       <div className="flex">
         <Sidebar currentPage="blogs" onNavigate={onNavigate} userRole={userRole} />
-        
+
         <main className="flex-1 p-8">
           {/* Back Button */}
           <button
@@ -135,7 +135,7 @@ export function BlogDetail({ blogId, userRole, onNavigate, onLogout, onBack, onV
               <div className="flex items-center justify-between">
                 <div
                   className="flex items-center gap-3 cursor-pointer"
-                  onClick={() => blog.id && onViewProfile(blog.id)}
+                  onClick={() => blog.id ? onViewProfile(blog.id) : undefined}
                 >
                   <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center text-white font-semibold">
                     {blog.authorAvatar}
@@ -157,9 +157,8 @@ export function BlogDetail({ blogId, userRole, onNavigate, onLogout, onBack, onV
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setLiked(!liked)}
-                    className={`p-3 rounded-xl transition-all ${
-                      liked ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
+                    className={`p-3 rounded-xl transition-all ${liked ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
                   >
                     <Heart className={`w-5 h-5 ${liked ? 'fill-current' : ''}`} />
                   </motion.button>

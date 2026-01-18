@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { 
+import {
   FileText,
-  MessageSquare, 
-  Brain, 
-  Users, 
-  ArrowRight, 
+  MessageSquare,
+  Brain,
+  Users,
+  ArrowRight,
   Sparkles,
   Star
 } from 'lucide-react';
@@ -132,7 +132,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
             <Sparkles className="w-4 h-4" />
             AI-Powered Academic Platform
           </motion.div>
-          
+
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -145,7 +145,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
               Learn Faster
             </span>
           </motion.h1>
-          
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -154,7 +154,7 @@ export function LandingPage({ onLogin, onGetStarted }: LandingPageProps) {
           >
             The ultimate platform for students and faculty to share knowledge, collaborate in real-time, and leverage AI for enhanced learning experiences.
           </motion.p>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

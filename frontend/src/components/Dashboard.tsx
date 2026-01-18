@@ -69,10 +69,10 @@ export function Dashboard({ userRole, onNavigate, onLogout, onViewResource }: Da
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar userRole={userRole} onLogout={onLogout} />
-      
+
       <div className="flex">
         <Sidebar currentPage="dashboard" onNavigate={onNavigate} userRole={userRole} />
-        
+
         <main className="flex-1 p-8">
           {/* Welcome Section */}
           <motion.div
